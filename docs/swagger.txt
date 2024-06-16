@@ -1,0 +1,45 @@
+PrajwalOrdrio: adding swager to nestjs
+
+GitHub Copilot: To add Swagger to a NestJS project, you need to follow these steps:
+
+1. **Install Swagger Packages**: Install the necessary Swagger packages using npm or yarn.
+
+2. **Import Swagger Module**: Import and configure the `SwaggerModule` in your main application file (usually `main.ts`).
+
+3. **Setup Swagger Options**: Define the options for Swagger, including setting up the title, description, version, etc., for the API documentation.
+
+4. **Initialize Swagger**: Use the `SwaggerModule` to create a document and setup the Swagger UI.
+
+Here's how you can do it:
+
+```typescript
+// Step 1: Install Swagger packages
+// Run in your terminal
+npm install @nestjs/swagger swagger-ui-express
+
+// Step 2 & 3: Modify your main.ts file
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  // Step 3: Setup Swagger options
+  const config = new DocumentBuilder()
+    .setTitle('Example API')
+    .setDescription('The example API description')
+    .setVersion('1.0')
+    .addTag('example')
+    .build();
+
+  // Step 4: Initialize Swagger
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+This code snippet will add Swagger to your NestJS project, generating API documentation accessible at `/api` on your application's root URL.

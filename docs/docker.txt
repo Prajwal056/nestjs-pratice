@@ -1,0 +1,55 @@
+To set up your NestJS project to run with different environments (production and development) in Docker, follow these steps:
+
+Step 1: Organize Environment Files
+Ensure you have two environment files at the root of your project:
+
+production.env
+dev.env
+These files should contain environment-specific variables. For example, NODE_ENV=production in production.env and NODE_ENV=development in dev.env.
+
+Step 2: Update the ConfigModule Setup
+Your AppModule already imports ConfigModule. Make sure it's set up to load the appropriate .env file based on the NODE_ENV value. This is automatically handled by ConfigModule.forRoot(), as it looks for .env files matching the NODE_ENV value.
+
+Step 3: Create Dockerfile
+Create a Dockerfile in your project root. This file will define how your application is containerized. Here's a simple example:
+
+Step 4: Create Docker Compose Files
+Create two Docker Compose files: one for development (docker-compose.dev.yml) and one for production (docker-compose.prod.yml). These files will specify how to run your application, including setting the appropriate environment variables.
+
+docker-compose.dev.yml:
+
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - dev.env
+    command: npm run start:dev
+
+docker-compose.prod.yml:
+
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - production.env
+    command: npm run start:prod
+
+Step 5: Running Your Application
+To run your application in development mode, use:
+
+    docker-compose -f docker-compose.dev.yml up --build
+
+To run your application in production mode, use:
+    
+    docker-compose -f docker-compose.prod.yml up --build
+
+This setup allows you to easily switch between development and production environments by using different Docker Compose files and environment variables.
